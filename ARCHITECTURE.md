@@ -703,7 +703,7 @@ Each phase has an acceptance criterion. Do not advance until it passes.
 
 ### Phase 1 — repo and cloud resources
 
-Repo created public; `ARCHITECTURE.md`, `CLAUDE.md`, `DECISIONS.md` and `fixtures/` committed; R2 bucket and D1 database created; `CF_API_TOKEN`, `CF_ACCOUNT_ID`, `CH_API_KEY` in repo secrets.
+Repo created public; `ARCHITECTURE.md`, `CLAUDE.md`, `DECISIONS.md` and `fixtures/` committed; R2 bucket and D1 database created; `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `CF_ACCOUNT_ID`, `CF_API_TOKEN`, `CH_API_KEY` in repo secrets.
 
 **Done when:** `wrangler d1 execute whattheyown --command="SELECT 1"` succeeds and `wrangler r2 bucket list` shows the bucket.
 

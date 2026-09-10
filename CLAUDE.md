@@ -92,8 +92,12 @@ find dist -type f | wc -l                              # must stay under 20,000
 
 ## Secrets
 
-`CF_API_TOKEN`, `CF_ACCOUNT_ID`, `CH_API_KEY`. GitHub repo secrets in CI, user secrets locally. Never commit them, never log them.
+`R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` — R2 access key pair (Dashboard > R2 > Manage R2 API Tokens), separate from the Cloudflare API token.
+`CF_ACCOUNT_ID` — Cloudflare account ID.
+`CF_API_TOKEN` — scoped to D1 write, used by wrangler in CI.
+`CH_API_KEY` — Companies House.
 
+GitHub repo secrets in CI, injected as environment variables. Locally, `dotnet user-secrets` — never a `.env` file or hand-set environment variables. Never commit them, never log them.
 ---
 
 ## Working style
