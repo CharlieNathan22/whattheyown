@@ -427,3 +427,14 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# --- Project-specific ---
+/data/
+/src/Web/dist/
+/src/Web/.astro/
+/src/Web/public/pc/
+.wrangler/
+.dev.vars
+*.db
+*.sqlite
+.idea/
