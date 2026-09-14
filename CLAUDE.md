@@ -35,7 +35,7 @@ Each one produces output that looks correct and is wrong.
 
 ## Conventions
 
-**Language and runtime:** C#, .NET 8. Nullable reference types enabled. `TreatWarningsAsErrors` on.
+**Language and runtime:** C#, .NET 10. Nullable reference types enabled. `TreatWarningsAsErrors` on.
 
 **Host:** `Microsoft.Extensions.Hosting` generic host with DI. Register clients as typed `HttpClient`s via `IHttpClientFactory` with a Polly retry pipeline (3 attempts, exponential backoff). Config binds from `appsettings.json` plus environment variables, env taking precedence.
 
@@ -56,8 +56,8 @@ Each one produces output that looks correct and is wrong.
 ## Layout
 
 ```
-/src/Ingestor/            .NET 8 console app (generic host)
-/src/ShardBuilder/        .NET 8 console app (ONS NSPL → postcode shards)
+/src/Ingestor/            .NET 10 console app (generic host)
+/src/ShardBuilder/        .NET 10 console app (ONS NSPL → postcode shards)
 /src/Web/                 Astro + Svelte
 /tests/Ingestor.Tests/    xUnit
 /fixtures/                committed API responses — read-only
