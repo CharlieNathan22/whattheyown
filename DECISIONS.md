@@ -40,6 +40,48 @@ Cloudflare's docs tell you not to use Workers Sites for new projects and point a
 
 Plain wiring was the initial recommendation — five lines of manual construction, no container, for a process that starts, does one job and exits. Chosen against in favour of the host for `IHttpClientFactory` with Polly, config layering, and an easier path if the ingestor ever moves off Actions.
 
+### Retry and timeout only, no circuit breaker
+
+**Rejected:** `AddStandardResilienceHandler`, the recommended default.
+
+It bundles five strategies — rate limiter, total timeout, retry, circuit breaker, per-attempt timeout — and the breaker is wrong for this workload. A Lords run is 41 sequential requests that must *all* land: §7 aborts the run outright when distinct member count ≠ `totalResults`. A breaker that opens partway through converts a transient wobble into an aborted run, which is the same outcome as having fetched nothing, and it does so based on request history rather than on the request in front of it. Breakers earn their place by protecting a struggling dependency from a caller hammering it concurrently. This caller is one request at a time, 4 times a day.
+
+The bundled options also validate against each other, so the knobs are not independent. Setting a 30s per-attempt budget alone throws at client-construction time:
+
+```
+OptionsValidationException: The sampling duration of circuit breaker strategy needs to be at
+least double of an attempt timeout strategy's timeout interval, in order to be effective.
+Sampling Duration: 30s, Attempt Timeout: 30s
+```
+
+— which means inventing a sampling window and a total-request timeout to satisfy a breaker that was not wanted.
+
+`HostConfiguration.AddIngestorHttpClients` therefore builds the pipeline explicitly: retry outermost (3 attempts, exponential, jittered), 30s timeout innermost so every attempt gets its own budget, nothing else. `HttpClient.Timeout` is set to `InfiniteTimeSpan` so its 100s default cannot fire mid-sequence and surface as a bare `TaskCanceledException` naming no attempt.
+
+**Revisit when:** something here makes genuinely concurrent calls. Companies House enrichment at 600 req/5min (Phase 5) is the first candidate, and it should get its own pipeline rather than widening this one — its failure modes and its rate limit are not the Parliament APIs'.
+
+### Parliament base URLs must end in a slash
+
+Validated at startup by `ParliamentOptionsValidator`, which looks pedantic and is not.
+
+`HttpClient` resolves a relative request path via `new Uri(baseAddress, requestUri)`, and RFC 3986 resolution replaces the last segment of the base when that segment is not followed by a slash. Verified:
+
+```
+base https://members-api.parliament.uk/api   + LordsInterests/Register
+  -> https://members-api.parliament.uk/LordsInterests/Register        ← "/api" gone
+base https://members-api.parliament.uk/api/  + LordsInterests/Register
+  -> https://members-api.parliament.uk/api/LordsInterests/Register
+```
+
+Both truncated forms return **404**, so this is not silent data corruption — but it is a failure that arrives mid-run, attributed to the endpoint rather than to the setting, and 404 is not transient so the retry pipeline will not mask it either. Catching it at startup costs one string comparison and names the setting. The Commons base is worse for being subtler: `.../api/v1` loses only `v1`, leaving a URL that still looks right.
+
+The same rule cuts the other way and the validator cannot see it: a **leading** slash on the relative path discards the base path even when the base is correct. Request paths are written without one.
+
+```
+base https://members-api.parliament.uk/api/  + /LordsInterests/Register
+  -> https://members-api.parliament.uk/LordsInterests/Register        ← "/api" gone again
+```
+
 ### Monorepo, not separate repos
 
 The mixed toolchain (Rider for .NET, VS Code for Astro) is not a real constraint — each IDE opens its own subtree.

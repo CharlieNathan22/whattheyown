@@ -37,7 +37,7 @@ Northern Ireland postcodes are excluded from postcode lookup for licensing reaso
 
 ```
 Parliament Interests API (Commons) ─┐
-Lords Register  (Members API)       ─┼─► .NET 8 ingestor ──► R2 (raw archive)
+Lords Register  (Members API)       ─┼─► .NET 10 ingestor ──► R2 (raw archive)
 Companies House · Wikidata          ─┘   (GitHub Actions, 6h)      │
                                                                     ▼
                                                         D1 (append-only event log)
@@ -63,7 +63,7 @@ Two things drive the design.
 | `CLAUDE.md` | Agent operating manual — hard rules, conventions, commands |
 | `DECISIONS.md` | Rejected alternatives and deferred ideas |
 | `fixtures/` | Committed API responses — evidence and test data |
-| `src/Ingestor/` | .NET 8 console app, runs on a 6-hourly cron |
+| `src/Ingestor/` | .NET 10 console app, runs on a 6-hourly cron |
 | `src/ShardBuilder/` | ONS postcode data → static shards, quarterly |
 | `src/Web/` | Astro + Svelte, static output |
 | `tests/` | xUnit |
