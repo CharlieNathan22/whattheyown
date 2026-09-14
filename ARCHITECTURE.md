@@ -273,8 +273,8 @@ Console output on Windows renders UTF-8 as CP1252 (`┬ú70,000`, `2024ÔÇô25`
 
 ```
 Interests API (Commons, structured) ─┐
-Lords Register  (Lords, free text)   ─┼─► .NET 8 console app ──► R2  raw/{timestamp}/*.json
-Members API  (profiles, both Houses) ─┤   (GitHub Actions, 6h)     (immutable archive)
+Lords Register  (Lords, free text)   ─┼─► .NET 10 console app ──► R2  raw/{timestamp}/*.json
+Members API  (profiles, both Houses) ─┤   (GitHub Actions, 6h)      (immutable archive)
 Companies House                      ─┘
                                       │
                                       ├──► D1  append-only event log
@@ -305,8 +305,8 @@ Single monorepo, public on GitHub.
 /ARCHITECTURE.md          this file — domain rules, verified API behaviour, schema
 /CLAUDE.md                agent operating manual, auto-loaded by Claude Code
 /DECISIONS.md             rejected alternatives and deferred ideas
-/src/Ingestor/            .NET 8 console app (generic host)
-/src/ShardBuilder/        .NET 8 console app (ONS NSPL → postcode shards)
+/src/Ingestor/            .NET 10 console app (generic host)
+/src/ShardBuilder/        .NET 10 console app (ONS NSPL → postcode shards)
 /src/Web/                 Astro + Svelte, static output
 /tests/Ingestor.Tests/    xUnit
 /migrations/              D1 SQL migrations
@@ -777,7 +777,7 @@ Domain rationale and rejected names: see `DECISIONS.md`.
 
 ## 14. Code conventions
 
-**Runtime:** C#, .NET 8. Nullable reference types enabled. `TreatWarningsAsErrors` on.
+**Runtime:** C#, .NET 10. Nullable reference types enabled. `TreatWarningsAsErrors` on.
 
 **Host:** `Microsoft.Extensions.Hosting` generic host with DI.
 
