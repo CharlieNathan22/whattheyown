@@ -20,4 +20,11 @@ public sealed class ParliamentOptions
     /// <summary>Members API, e.g. <c>https://members-api.parliament.uk/api/</c>.</summary>
     [Required(AllowEmptyStrings = false, ErrorMessage = "Parliament:MembersApiBaseUrl is not set (appsettings.json).")]
     public string MembersApiBaseUrl { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Pause between sequential page requests. Neither API publishes a rate limit, so a 41-page Lords
+    /// run stays polite. Tests set it to 0.
+    /// </summary>
+    [Range(0, 60_000, ErrorMessage = "Parliament:RequestDelayMs must be between 0 and 60000.")]
+    public int RequestDelayMs { get; init; } = 500;
 }

@@ -1,4 +1,5 @@
 using Ingestor.Configuration;
+using Ingestor.Parliament.Lords;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http.Resilience;
@@ -93,6 +94,12 @@ public static class HostConfiguration
 
                 pipeline.AddTimeout(HttpAttemptTimeout);
             });
+        });
+
+        services.AddHttpClient<ILordsRegisterClient, LordsRegisterClient>((provider, client) =>
+        {
+            var parliament = provider.GetRequiredService<IOptions<ParliamentOptions>>().Value;
+            client.BaseAddress = new Uri(parliament.MembersApiBaseUrl, UriKind.Absolute);
         });
 
         return services;

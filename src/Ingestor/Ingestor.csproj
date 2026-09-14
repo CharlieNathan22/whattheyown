@@ -21,4 +21,8 @@
     <Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Hosting\.github\" />
+  </ItemGroup>
+
 </Project>

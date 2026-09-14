@@ -1,0 +1,14 @@
+﻿name: PR source branch
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  source-branch-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Only develop may merge into main
+        if: github.head_ref != 'develop'
+        run: |
+          echo "::error::PRs into main must come from 'develop' (got '${{ github.head_ref }}')."
+          exit 1
