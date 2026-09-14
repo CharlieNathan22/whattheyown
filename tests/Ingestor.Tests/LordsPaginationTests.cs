@@ -71,22 +71,5 @@ public class LordsPaginationTests
         return page!.Items.Select(i => i.Value.Member.Id).ToHashSet();
     }
 
-    private static string FindFixturesDirectory()
-    {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-
-        while (dir is not null)
-        {
-            var candidate = Path.Combine(dir.FullName, "fixtures");
-            if (Directory.Exists(candidate))
-            {
-                return candidate;
-            }
-
-            dir = dir.Parent;
-        }
-
-        throw new DirectoryNotFoundException(
-            $"Could not locate a 'fixtures' directory above {AppContext.BaseDirectory}.");
-    }
+    private static string FindFixturesDirectory() => Fakes.FixturePaths.FixturesDirectory;
 }
